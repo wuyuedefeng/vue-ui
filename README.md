@@ -1,30 +1,42 @@
-# vue-ui
+# vui
 
-> A Vue.js project
+> A Vue.js UI project
 
-## Build Setup
-
-``` bash
 # install dependencies
-npm install
 
-# serve with hot reload at localhost:8080
-npm run dev
+> scss编译支持
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
+$ npm install node-sass --save-dev
+$ npm install sass-loader --save-dev
+$ npm install sass-resources-loader --save-dev
+```
+需改build/utils.js 查找到
+```
+scss: generateLoaders('sass'),
+```
+替换为
+```
+scss: generateLoaders('sass').concat(
+  {
+    loader: 'sass-resources-loader',
+    options: {
+      resources: path.resolve(__dirname, '../src/assets/stylesheets/mixins/vuiVar.scss')
+    }
+  }
+),
+```
+- 在 src/assets/stylesheets/mixins/vmuiVar.scss 中添加配置 [以下是默认值]
+```
+$vuiSupportRem: false;
+// rem模式 该值应该和rem.js函数传递的值保持一致 
+// [效果图如果是750 如果打算1px=1rem 需$vuiDesignSketchWidth和rem.js的传值为：750]
+$vuiDesignSketchWidth: 375;
+```
+- 如果使用rem模式 在 `src/main.js` 导入rem.js
+```
+// 仅rem模式引入 默认值 375, 于scss中$vmuiDesignSketchWidth保持一致
+require('./vui/asserts/javascripts/rem')(750)
+```
+rem模式 页面缩放比例： `scale = 1 / dpr`
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
